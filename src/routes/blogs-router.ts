@@ -28,11 +28,8 @@ blogsRouter.put('/:id',authMiddleware, updateBlogValidation, (req: RequestWithPa
 });
 blogsRouter.delete('/:id', authMiddleware, (req:RequestWithParams<{ id: string }>, res: Response) => {
     let isDeleted = blogsLocalRepository.deleteBlogById(+req.params.id);
-    if (isDeleted) {
-        res.sendStatus(CodeResponsesEnum.No_Content_204)
-    } else {
-        res.sendStatus(CodeResponsesEnum.Not_Found_404)
-    }
+    if (isDeleted) return res.sendStatus(CodeResponsesEnum.No_Content_204);
+    return res.sendStatus(CodeResponsesEnum.Not_Found_404);
 });
 
 
