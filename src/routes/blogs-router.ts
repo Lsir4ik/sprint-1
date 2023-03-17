@@ -12,7 +12,6 @@ blogsRouter.get('/', (req: Request, res: Response) => {
     const blogs = blogsLocalRepository.findAllBlogs()
     res.status(CodeResponsesEnum.OK_200).send(blogs);
 });
-// blogsRouter.post('/', inputBlogsBodyValidation, inputValidationMiddleware, (req:RequestWithBody<BlogInputModel>, res: Response) => {
 blogsRouter.post('/', authMiddleware, createBlogValidation, (req:RequestWithBody<BlogInputModel>, res: Response) => {
     const newBlog = blogsLocalRepository.createBlog(req.body);
     res.status(CodeResponsesEnum.Created_201).send(newBlog);

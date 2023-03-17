@@ -19,7 +19,8 @@ postsRouter.get('/', (req: RequestWithQuery<{ name: string }>, res: Response) =>
 });
 postsRouter.post('/', authMiddleware, createPostValidation, (req: RequestWithBody<PostInputModel>, res: Response) => {
     const newPost = postLocalRepository.createPost(req.body);
-    res.status(CodeResponsesEnum.Created_201).send(newPost);
+    if (!newPost) return res.sendStatus(CodeResponsesEnum.Not_Found_404);
+    return res.status(CodeResponsesEnum.Created_201).send(newPost);
 });
 postsRouter.get('/:id', (req: RequestWithParams<{ id: string }>, res: Response) => {
     const newPost = postLocalRepository.findPostById(+req.params.id);

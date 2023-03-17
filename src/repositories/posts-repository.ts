@@ -18,18 +18,24 @@ export const postLocalRepository = {
     findPostById(id: Number) {
         return posts.find(b => +b.id === id)
     },
-    createPost(body: PostInputModel): PostViewModel | undefined {
-        const blogNameById = blogsLocalRepository.findBlogById(+body.blogId)?.name
-        const newPost: PostViewModel = {
-            id: new Date().getTime().toString(),
-            title: body.title,
-            shortDescription: body.shortDescription,
-            content: body.content,
-            blogId: body.blogId,
-            blogName: blogNameById,
+
+    // TODO как правильно создать пост (зависимость между постом и блогом)
+    createPost(body: PostInputModel): PostViewModel | null {
+        const blogNameById = blogsLocalRepository.findBlogById(+body.blogId)
+        if (blogNameById) {
+            const newPost: PostViewModel = {
+                id: new Date().getTime().toString(),
+                title: body.title,
+                shortDescription: body.shortDescription,
+                content: body.content,
+                blogId: body.blogId,
+                blogName: blogNameById.name,
+            }
+            posts.push(newPost);
+            return newPost;
         }
-        posts.push(newPost);
-        return newPost;
+        return null;
+
     },
     updatePost(id: Number, body: PostInputModel) {
         const post = posts.find(p => +p.id === id)
