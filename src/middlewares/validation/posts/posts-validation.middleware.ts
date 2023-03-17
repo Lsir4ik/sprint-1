@@ -3,17 +3,8 @@ import {blogsLocalRepository} from "../../../repositories/blogs-repository";
 import {inputValidationMiddleware} from "../input-validation-middleware";
 
 const isValidBlogId: CustomValidator = value => {
-    if(!value) {
-        return new Error('Invalid Blog_ID')
-    } else {
-        const blog = blogsLocalRepository.findBlogById(value)
-
-        if (blog) {
-            return true;
-        } else {
-            return new Error('Invalid Blog_ID')
-        }
-    }
+    const blog = blogsLocalRepository.findBlogById(+value)
+    return !blog ? false : true;
 };
 const titleValidation = body('title').isString().trim().notEmpty().isLength({max: 30})
 const shortDescriptionValidation = body('shortDescription').isString().trim().notEmpty().isLength({max: 100})
