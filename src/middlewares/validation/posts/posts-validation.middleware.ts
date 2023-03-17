@@ -5,7 +5,7 @@ import {inputValidationMiddleware} from "../input-validation-middleware";
 const titleValidation = body('title').isString().trim().notEmpty().isLength({max: 30})
 const shortDescriptionValidation = body('shortDescription').isString().trim().notEmpty().isLength({max: 100})
 const contentValidation = body('content').isString().trim().notEmpty().isLength({max: 1000})
-const blogIdValidation = body('content').isString().trim().notEmpty()
+const blogIdValidation = body('blogId').isString().trim().notEmpty()
 
 // для валидации blogId (проверки наличия такого блога) при создании поста
 const isValidBlogId: CustomValidator = value => {
