@@ -18,7 +18,8 @@ blogsRouter.post('/', authMiddleware, createBlogValidation, (req:RequestWithBody
 });
 blogsRouter.get('/:id', (req: RequestWithParams<{ id: string }>, res: Response) => {
     const foundBlog = blogsLocalRepository.findBlogById(+req.params.id);
-    res.status(CodeResponsesEnum.OK_200).send(foundBlog);
+    if(foundBlog) return res.status(CodeResponsesEnum.OK_200).send(foundBlog);
+    return res.sendStatus(CodeResponsesEnum.Not_Found_404);
 });
 blogsRouter.put('/:id',authMiddleware, updateBlogValidation, (req: RequestWithParamsAndBody<{ id: string }, BlogInputModel>, res: Response) => {
     let isUpdated = blogsLocalRepository.updateBlog(+req.params.id, req.body);
