@@ -11,10 +11,10 @@ app.use(express.json());
 app.get('/', (req:Request, res:Response) => {
     res.send('Hello World!!')
 })
-app.use('/posts', postsRouter);
-app.use('/blogs', blogsRouter);
 app.delete('/testing/all-data', async (req: Request, res: Response) => {
     await blogsRepository.deleteAllBlogs()
     await postsRepository.deleteAllPosts()
     res.sendStatus(CodeResponsesEnum.No_Content_204);
 })
+app.use('/posts', postsRouter);
+app.use('/blogs', blogsRouter);

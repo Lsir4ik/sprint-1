@@ -3,15 +3,23 @@ import {PostInputModel} from "../../models/PostsModels/PostInputModel";
 import {blogsCollection, postsCollection} from "../../db/db";
 import {ObjectId} from "mongodb";
 
+function postMapping(post: any): PostViewModel {
+    const postIdMongo = post._id
+    delete post._id
+    return {
+        id:postIdMongo.toString(),
+        ...post
+    }
+}
 export const postsRepository = {
     async findAllPosts(): Promise<PostViewModel[]> {
         const posts = await postsCollection.find().toArray()
-        return posts;
+        return posts.map(post => postMapping(post));
     },
     async findPostById(id: string): Promise<PostViewModel | null> {
         const foundPost = await postsCollection.findOne({_id: new ObjectId(id)});
         if (foundPost) {
-            return foundPost;
+            return postMapping(foundPost);
         } else {
             return null;
         }

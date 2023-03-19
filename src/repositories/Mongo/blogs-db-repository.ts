@@ -3,15 +3,24 @@ import {BlogInputModel} from "../../models/BlogsModels/BlogInputModel";
 import {blogsCollection} from "../../db/db";
 import {ObjectId} from "mongodb";
 
+function blogMapping(blog: any): BlogViewModel {
+    const blogIdMongo = blog._id
+    delete blog._id
+    return {
+        id:blogIdMongo.toString(),
+        ...blog
+    }
+}
+
 export const blogsRepository = {
     async findAllBlogs(): Promise<BlogViewModel[]> {
         const blogs = await blogsCollection.find().toArray()
-        return blogs;
+        return blogs.map(blog => blogMapping(blog));
     },
     async findBlogById(id: string): Promise<BlogViewModel | null> {
-        const blog: BlogViewModel | null = await blogsCollection.findOne({_id: new ObjectId(id)})
-        if (blog) {
-            return blog;
+        const foundBlog: BlogViewModel | null = await blogsCollection.findOne({_id: new ObjectId(id)})
+        if (foundBlog) {
+            return blogMapping(foundBlog);
         } else {
             return null;
         }
