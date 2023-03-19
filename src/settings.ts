@@ -1,7 +1,9 @@
 import express, {Request, Response} from "express";
 import {postsRouter} from "./routes/posts-router";
 import {blogsRouter} from "./routes/blogs-router";
-import {testingRouter} from "./routes/testing-router";
+import {blogsRepository} from "./repositories/Mongo/blogs-db-repository";
+import {postsRepository} from "./repositories/Mongo/posts-db-repository";
+import {CodeResponsesEnum} from "./types/types";
 
 export const app = express();
 
@@ -11,4 +13,8 @@ app.get('/', (req:Request, res:Response) => {
 })
 app.use('/posts', postsRouter);
 app.use('/blogs', blogsRouter);
-app.use('/testing/all-data', testingRouter)
+app.delete('/testing/all-data', async (req: Request, res: Response) => {
+    await blogsRepository.deleteAllBlogs()
+    await postsRepository.deleteAllPosts()
+    res.sendStatus(CodeResponsesEnum.No_Content_204);
+})
