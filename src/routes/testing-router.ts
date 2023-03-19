@@ -5,7 +5,7 @@ import {postsRepository} from "../repositories/Mongo/posts-db-repository";
 
 export const testingRouter = Router();
 
-testingRouter.delete('/all-data', async (req: Request, res: Response) => {
+testingRouter.delete('/', async (req: Request, res: Response) => {
     await blogsRepository.deleteAllBlogs()
     await postsRepository.deleteAllPosts()
     res.sendStatus(CodeResponsesEnum.No_Content_204);

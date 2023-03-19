@@ -11,4 +11,4 @@ app.get('/', (req:Request, res:Response) => {
 })
 app.use('/posts', postsRouter);
 app.use('/blogs', blogsRouter);
-app.use('/testing', testingRouter)
+app.use('/testing/all-data', testingRouter)
