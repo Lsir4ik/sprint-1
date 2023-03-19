@@ -4,7 +4,10 @@ import {blogsRepository} from "../../../repositories/Mongo/blogs-db-repository";
 
 const isValidBlogId: CustomValidator = async (value: string): Promise<boolean> => {
     const blog = await blogsRepository.findBlogById(value);
-    return !blog ? false : true;
+    if(!blog) {
+        throw new Error('Invalid blogId')
+    }
+    return true
 };
 const titleValidation = body('title').isString().trim().notEmpty().isLength({max: 30})
 const shortDescriptionValidation = body('shortDescription').isString().trim().notEmpty().isLength({max: 100})

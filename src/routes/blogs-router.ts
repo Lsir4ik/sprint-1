@@ -17,9 +17,14 @@ blogsRouter.post('/', authMiddleware, createBlogValidation, async (req: RequestW
     res.status(CodeResponsesEnum.Created_201).send(newBlog);
 });
 blogsRouter.get('/:id', async (req: RequestWithParams<{ id: string }>, res: Response) => {
-    const foundBlog = await blogsRepository.findBlogById(req.params.id);
-    if (foundBlog) return res.status(CodeResponsesEnum.OK_200).send(foundBlog);
-    return res.sendStatus(CodeResponsesEnum.Not_Found_404);
+    try{
+        const foundBlog = await blogsRepository.findBlogById(req.params.id);
+        return res.status(CodeResponsesEnum.OK_200).send(foundBlog);
+    }catch (e) {
+        console.log(e)
+        return res.sendStatus(CodeResponsesEnum.Not_Found_404);
+    }
+
 });
 blogsRouter.put('/:id',authMiddleware, updateBlogValidation, async (req: RequestWithParamsAndBody<{ id: string }, BlogInputModel>, res: Response) => {
     let isUpdated = await blogsRepository.updateBlog(req.params.id, req.body);
