@@ -1,9 +1,9 @@
 import {body, CustomValidator} from "express-validator";
-import {blogsLocalRepository} from "../../../repositories/blogs-repository";
 import {inputValidationMiddleware} from "../input-validation-middleware";
+import {blogsRepository} from "../../../repositories/Mongo/blogs-db-repository";
 
-const isValidBlogId: CustomValidator = value => {
-    const blog = blogsLocalRepository.findBlogById(+value)
+const isValidBlogId: CustomValidator = async (value: string): Promise<boolean> => {
+    const blog = await blogsRepository.findBlogById(value);
     return !blog ? false : true;
 };
 const titleValidation = body('title').isString().trim().notEmpty().isLength({max: 30})

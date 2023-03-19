@@ -1,6 +1,7 @@
-import {PostViewModel} from "../models/PostsModels/PostViewModel";
-import {PostInputModel} from "../models/PostsModels/PostInputModel";
-import {blogsLocalRepository} from "./blogs-repository";
+/*
+import {PostViewModel} from "../../models/PostsModels/PostViewModel";
+import {PostInputModel} from "../../models/PostsModels/PostInputModel";
+import {blogsLocalRepository} from "./blogs-in-memory-repository";
 
 let posts: Array<PostViewModel> = [{
     id: '1',
@@ -19,7 +20,6 @@ export const postLocalRepository = {
         return posts.find(b => +b.id === id)
     },
 
-    // TODO как правильно создать пост (зависимость между постом и блогом)
     createPost(body: PostInputModel): PostViewModel | null {
         const blogNameById = blogsLocalRepository.findBlogById(+body.blogId)
         if (blogNameById) {
@@ -62,3 +62,5 @@ export const postLocalRepository = {
         posts = [];
     }
 }
+
+ */

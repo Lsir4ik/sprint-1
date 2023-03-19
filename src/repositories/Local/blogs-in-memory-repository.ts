@@ -1,5 +1,6 @@
-import {BlogViewModel} from "../models/BlogsModels/BlogViewModel";
-import {BlogInputModel} from "../models/BlogsModels/BlogInputModel";
+/*
+import {BlogViewModel} from "../../models/BlogsModels/BlogViewModel";
+import {BlogInputModel} from "../../models/BlogsModels/BlogInputModel";
 
 let blogs: Array<BlogViewModel> = [{
     id: "1",
@@ -50,3 +51,4 @@ export const blogsLocalRepository = {
     },
 
 }
+*/

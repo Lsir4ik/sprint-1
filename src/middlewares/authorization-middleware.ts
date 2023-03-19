@@ -1,13 +1,11 @@
 import {NextFunction, Request, Response} from "express";
-import {CodeResponsesEnum} from "../types/types";
-import {atob} from "buffer";
 
 const users = [
     {login: 'admin', password: 'qwerty'}
 ]
 
 let data = `${users[0].login}:${users[0].password}`
-let buff = new Buffer(data)
+let buff = Buffer.from(data)
 let base64data = buff.toString('base64')
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
