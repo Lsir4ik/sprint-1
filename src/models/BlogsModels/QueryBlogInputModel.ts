@@ -1,4 +1,4 @@
-export type QueryBlogVInputModel = {
+export type QueryBlogInputModel = {
     searchNameTerm?: string
     sortBy?: string
     sortDirection?: string

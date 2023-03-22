@@ -11,29 +11,29 @@ import {blogQueryRepository, blogsRepository} from "../repositories/Mongo/blogs-
 import {BlogInputModel} from "../models/BlogsModels/BlogInputModel";
 import {createBlogValidation, updateBlogValidation} from "../middlewares/validation/blogs/blogs-validation.middleware";
 import {authMiddleware} from "../middlewares/authorization-middleware";
-import {QueryBlogVInputModel} from "../models/BlogsModels/QueryBlogVInputModel";
-import {QueryPostInputModel} from "../models/PostsModels/QueryPostInputModel";
+import {QueryBlogInputModel} from "../models/BlogsModels/QueryBlogInputModel";
+import {QueryBlogPostInputModel} from "../models/PostsModels/QueryBlogPostInputModel";
 import {createPostForBlogValidation} from "../middlewares/validation/posts/posts-validation.middleware";
 import {BlogPostInputModel} from "../models/BlogsModels/BlogPostInputModel";
 
 
 export const blogsRouter = Router();
 
-blogsRouter.get('/', async (req: RequestWithQuery<QueryBlogVInputModel>, res: Response) => {
-    const blogs = await blogQueryRepository.pagingFindBlogs(
+blogsRouter.get('/', async (req: RequestWithQuery<QueryBlogInputModel>, res: Response) => {
+    const foundBlogs = await blogQueryRepository.pagingFindBlogs(
         req.query.searchNameTerm,
         req.query.sortBy,
         req.query.sortDirection,
         req.query.pageNumber,
         req.query.pageSize
     )
-    res.status(CodeResponsesEnum.OK_200).send(blogs);
+    res.status(CodeResponsesEnum.OK_200).send(foundBlogs);
 });
 blogsRouter.post('/', authMiddleware, createBlogValidation, async (req: RequestWithBody<BlogInputModel>, res: Response) => {
     const newBlog = await blogsRepository.createBlog(req.body);
     res.status(CodeResponsesEnum.Created_201).send(newBlog);
 });
-blogsRouter.get('/:id/posts', async (req: RequestWithParamsAndQuery<{ id: string }, QueryPostInputModel>, res: Response) => {
+blogsRouter.get('/:id/posts', async (req: RequestWithParamsAndQuery<{ id: string }, QueryBlogPostInputModel>, res: Response) => {
     const postsOfBlog = await blogQueryRepository.getAllPostsOfBlog(
         req.params.id,
         req.query.pageNumber,

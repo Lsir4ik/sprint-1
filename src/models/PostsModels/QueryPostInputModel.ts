@@ -1,7 +1,6 @@
 export type QueryPostInputModel = {
-    pageNumber?: number
-    pageSize?: number
+    pageNumber?: string
+    pageSize?: string
     sortBy?: string
     sortDirection?: string
-    blogId: string
 }

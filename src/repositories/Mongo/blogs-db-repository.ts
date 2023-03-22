@@ -4,7 +4,7 @@ import {blogsCollection, postsCollection} from "../../db/db";
 import {ObjectId} from "mongodb";
 import {PaginatorBlogViewModel} from "../../models/BlogsModels/PaginatorBlogViewModel";
 import {PaginatorPostViewModel} from "../../models/PostsModels/PaginatorPostViewModel";
-import {postMapping} from "./posts-db-repository";
+import {postTypeMapping} from "./posts-db-repository";
 import {PostViewModel} from "../../models/PostsModels/PostViewModel";
 import {BlogPostInputModel} from "../../models/BlogsModels/BlogPostInputModel";
 
@@ -148,7 +148,7 @@ export const blogQueryRepository = {
             const allPostsOfBlog = await postsCollection.find({}).toArray()
             const totalCountOfPosts = allPostsOfBlog.length
             const pagesCountOfFoundedPosts = Math.ceil(totalCountOfPosts / dbPageSize)
-            const formatFoundedPosts = foundPostsOfBlog.map(postMapping)
+            const formatFoundedPosts = foundPostsOfBlog.map(postTypeMapping)
             return {
                 pagesCount: pagesCountOfFoundedPosts,
                 page: dbPageNumber,
