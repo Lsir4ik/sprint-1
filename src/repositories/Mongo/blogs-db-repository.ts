@@ -8,7 +8,6 @@ import {postMapping} from "./posts-db-repository";
 import {PostViewModel} from "../../models/PostsModels/PostViewModel";
 import {BlogPostInputModel} from "../../models/BlogsModels/BlogPostInputModel";
 
-//  TODO Переделать any
 function blogTypeMapping(blog: any): BlogViewModel {
     return {
         id: blog._id.toString(),
