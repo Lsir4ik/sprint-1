@@ -3,12 +3,15 @@ import {PostInputModel} from "../../models/PostsModels/PostInputModel";
 import {blogsCollection, postsCollection} from "../../db/db";
 import {ObjectId} from "mongodb";
 
-function postMapping(post: any): PostViewModel {
-    const postIdMongo = post._id
-    delete post._id
+export function postMapping(post: any): PostViewModel {
     return {
-        id:postIdMongo.toString(),
-        ...post
+        id:post._id.toString(),
+        title: post.title,
+        shortDescription: post.shortDescription,
+        content: post.content,
+        blogId: post.blogId,
+        blogName: post.blogName,
+        createdAt: post.createdAt
     }
 }
 export const postsRepository = {

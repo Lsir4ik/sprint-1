@@ -11,6 +11,7 @@ app.use(express.json());
 app.get('/', (req:Request, res:Response) => {
     res.send('Hello World!!')
 })
+// TODO Вернуть router на testing/all-data
 app.delete('/testing/all-data', async (req: Request, res: Response) => {
     await blogsRepository.deleteAllBlogs()
     await postsRepository.deleteAllPosts()

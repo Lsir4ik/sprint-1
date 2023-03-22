@@ -29,3 +29,10 @@ export const updatePostValidation = [
     blogIdValidation,
     inputValidationMiddleware
 ]
+
+export const createPostForBlogValidation = [
+    titleValidation,
+    shortDescriptionValidation,
+    contentValidation,
+    inputValidationMiddleware
+]
