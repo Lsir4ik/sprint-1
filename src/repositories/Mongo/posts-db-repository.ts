@@ -10,9 +10,9 @@ export function postTypeMapping(post: any): PostViewModel {
         title: post.title,
         shortDescription: post.shortDescription,
         content: post.content,
+        createdAt: post.createdAt,
         blogId: post.blogId,
         blogName: post.blogName,
-        createdAt: post.createdAt
     }
 }
 
@@ -36,9 +36,9 @@ export const postsRepository = {
                 title: dataToCreate.title,
                 shortDescription: dataToCreate.shortDescription,
                 content: dataToCreate.content,
+                createdAt: new Date().toISOString(),
                 blogId: dataToCreate.blogId,
                 blogName: blogNameById.name,
-                createdAt: new Date().toISOString(),
             }
             const createResult = await postsCollection.insertOne(newPost)
             return {
@@ -78,7 +78,7 @@ export const postQueryRepository = {
         const dbPageNumber = pageNumber ? +pageNumber : 1
         const dbPageSize = pageSize ? +pageSize : 10
         const dbSortBy = sortBy || 'createdAt'
-        const dbSortDirection = sortDirection === 'desc' ? -1 : 1
+        const dbSortDirection = sortDirection ? sortDirection === 'asc' ? 1 : -1 : -1
         const dbPostsToSkip = (dbPageNumber - 1) * dbPageSize
 
         const foundPosts = await postsCollection.find()

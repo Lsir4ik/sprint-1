@@ -74,9 +74,9 @@ export const blogsRepository = {
                 title: dataToCreate.title,
                 shortDescription: dataToCreate.shortDescription,
                 content: dataToCreate.content,
+                createdAt: new Date().toISOString(),
                 blogId: foundBlog._id.toString(),
                 blogName: foundBlog.name,
-                createdAt: new Date().toISOString(),
             }
             const createResult = await postsCollection.insertOne(newPost)
             return {
@@ -84,9 +84,9 @@ export const blogsRepository = {
                 title: newPost.title,
                 shortDescription: newPost.shortDescription,
                 content: newPost.content,
+                createdAt: newPost.createdAt,
                 blogId: newPost.blogId,
                 blogName: newPost.blogName,
-                createdAt: newPost.createdAt
             };
         }
         return null;
@@ -102,7 +102,8 @@ export const blogQueryRepository = {
                           pageSize?: string): Promise<PaginatorBlogViewModel> {
         const dbSearchTerm = searchNameTerm || null
         const dbSortBy = sortBy || 'createdAt'
-        const dbSortDirection = sortDirection === 'desc' ? -1 : 1
+        // TODO почему не работает с if и let?
+        const dbSortDirection = sortDirection ? sortDirection === 'asc' ? 1 : -1 : -1
         const dbPageNumber = pageNumber ? +pageNumber : 1
         const dbPageSize = pageSize ? +pageSize : 10
         const dbBlogsToSkip = (dbPageNumber - 1) * dbPageSize
@@ -134,7 +135,7 @@ export const blogQueryRepository = {
         const dbPageNumber = pageNumber ? +pageNumber : 1
         const dbPageSize = pageSize ? +pageSize : 10
         const dbSortBy = sortBy || 'createdAt'
-        const dbSortDirection = sortDirection === 'desc' ? -1 : 1
+        const dbSortDirection = sortDirection ? sortDirection === 'asc' ? 1 : -1 : -1
         const dbPostsToSkip = (dbPageNumber - 1) * dbPageSize
 
         const foundPostsOfBlog = await postsCollection.find({blogId: blogId})
