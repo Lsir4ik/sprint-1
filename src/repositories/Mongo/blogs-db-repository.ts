@@ -146,7 +146,7 @@ export const blogQueryRepository = {
         if (foundPostsOfBlog.length === 0) {
             return null
         } else {
-            const allPostsOfBlog = await postsCollection.find({}).toArray()
+            const allPostsOfBlog = await postsCollection.find({blogId: blogId}).toArray()
             const totalCountOfPosts = allPostsOfBlog.length
             const pagesCountOfFoundedPosts = Math.ceil(totalCountOfPosts / dbPageSize)
             const formatFoundedPosts = foundPostsOfBlog.map(postTypeMapping)
