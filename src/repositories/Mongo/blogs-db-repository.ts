@@ -5,8 +5,6 @@ import {ObjectId} from "mongodb";
 import {PaginatorBlogViewModel} from "../../models/BlogsModels/PaginatorBlogViewModel";
 import {PaginatorPostViewModel} from "../../models/PostsModels/PaginatorPostViewModel";
 import {postTypeMapping} from "./posts-db-repository";
-import {PostViewModel} from "../../models/PostsModels/PostViewModel";
-import {BlogPostInputModel} from "../../models/BlogsModels/BlogPostInputModel";
 
 function blogTypeMapping(blog: any): BlogViewModel {
     return {
@@ -32,14 +30,7 @@ export const blogsRepository = {
             return null;
         }
     },
-    async createBlog(dataToCreate: BlogInputModel): Promise<BlogViewModel> {
-        const newBlog: BlogViewModel = {
-            name: dataToCreate.name,
-            description: dataToCreate.description,
-            websiteUrl: dataToCreate.websiteUrl,
-            createdAt: new Date().toISOString(),
-            isMembership: false,
-        }
+    async createBlog(newBlog: BlogViewModel): Promise<BlogViewModel> {
         const createResult = await blogsCollection.insertOne(newBlog)
         return {
             id: createResult.insertedId.toString(),
@@ -66,31 +57,6 @@ export const blogsRepository = {
     },
     async deleteAllBlogs(): Promise<void> {
         await blogsCollection.deleteMany({})
-    },
-    async createPostForBlog(blogId: string, dataToCreate: BlogPostInputModel): Promise<PostViewModel | null> {
-        const foundBlog = await blogsCollection.findOne({_id: new ObjectId(blogId)})
-        if (foundBlog) {
-            const newPost: PostViewModel = {
-                title: dataToCreate.title,
-                shortDescription: dataToCreate.shortDescription,
-                content: dataToCreate.content,
-                createdAt: new Date().toISOString(),
-                blogId: foundBlog._id.toString(),
-                blogName: foundBlog.name,
-            }
-            const createResult = await postsCollection.insertOne(newPost)
-            return {
-                id: createResult.insertedId.toString(),
-                title: newPost.title,
-                shortDescription: newPost.shortDescription,
-                content: newPost.content,
-                createdAt: newPost.createdAt,
-                blogId: newPost.blogId,
-                blogName: newPost.blogName,
-            };
-        }
-        return null;
-
     },
 }
 

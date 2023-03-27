@@ -3,3 +3,4 @@
 /dist
 /__test__
 /.env
+/utils

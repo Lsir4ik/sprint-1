@@ -1,13 +1,15 @@
-/*
-import {BlogInputModel} from "../models/BlogsModels/BlogInputModel";
 import {BlogViewModel} from "../models/BlogsModels/BlogViewModel";
-import {blogsCollection, postsCollection} from "../db/db";
-import {BlogPostInputModel} from "../models/BlogsModels/BlogPostInputModel";
+import {BlogInputModel} from "../models/BlogsModels/BlogInputModel";
 import {PostViewModel} from "../models/PostsModels/PostViewModel";
-import {ObjectId} from "mongodb";
+import {BlogPostInputModel} from "../models/BlogsModels/BlogPostInputModel";
+import {blogsRepository} from "../repositories/Mongo/blogs-db-repository";
+import {postsRepository} from "../repositories/Mongo/posts-db-repository";
 
-export const createBlogService = {
-    async createNewBlog(dataToCreate: BlogInputModel): Promise<BlogViewModel> {
+export const blogsService = {
+    async findBlogById(id: string): Promise<BlogViewModel | null> {
+        return blogsRepository.findBlogById(id)
+    },
+    async createBlog(dataToCreate: BlogInputModel): Promise<BlogViewModel> {
         const newBlog: BlogViewModel = {
             name: dataToCreate.name,
             description: dataToCreate.description,
@@ -15,41 +17,33 @@ export const createBlogService = {
             createdAt: new Date().toISOString(),
             isMembership: false,
         }
-        const createResult = await blogsCollection.insertOne(newBlog)
-        return {
-            id: createResult.insertedId.toString(),
-            name: newBlog.name,
-            description: newBlog.description,
-            websiteUrl: newBlog.websiteUrl,
-            createdAt: newBlog.createdAt,
-            isMembership: newBlog.isMembership
-        }
+        const createdBlog = await blogsRepository.createBlog(newBlog)
+        return createdBlog
+    },
+    async updateBlog(id: string, dataToUpdate: BlogInputModel): Promise<boolean> {
+        return blogsRepository.updateBlog(id, dataToUpdate)
+    },
+    async deleteBlogById(id: string): Promise<boolean> {
+        const isDeleted = await blogsRepository.deleteBlogById(id)
+        return isDeleted
+    },
+    async deleteAllBlogs(): Promise<void> {
+        await blogsRepository.deleteAllBlogs()
     },
     async createPostForBlog(blogId: string, dataToCreate: BlogPostInputModel): Promise<PostViewModel | null> {
-        const foundBlog = await blogsCollection.findOne({_id: new ObjectId(blogId)})
+        const foundBlog = await blogsRepository.findBlogById(blogId)
         if (foundBlog) {
             const newPost: PostViewModel = {
                 title: dataToCreate.title,
                 shortDescription: dataToCreate.shortDescription,
                 content: dataToCreate.content,
                 createdAt: new Date().toISOString(),
-                blogId: foundBlog._id.toString(),
+                blogId: foundBlog.id,
                 blogName: foundBlog.name,
             }
-            const createResult = await postsCollection.insertOne(newPost)
-            return {
-                id: createResult.insertedId.toString(),
-                title: newPost.title,
-                shortDescription: newPost.shortDescription,
-                content: newPost.content,
-                createdAt: newPost.createdAt,
-                blogId: newPost.blogId,
-                blogName: newPost.blogName,
-            };
+            const createdPost = await postsRepository.createPost(newPost)
+            return createdPost
         }
         return null;
-
     },
 }
-
- */

@@ -3,7 +3,7 @@ export type PostViewModel = {
     title: string,
     shortDescription: string,
     content: string,
-    blogId: string,
+    blogId?: string,
     blogName: string | undefined,
     createdAt: string
 

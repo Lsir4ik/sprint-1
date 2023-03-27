@@ -15,7 +15,6 @@ export function postTypeMapping(post: any): PostViewModel {
         blogName: post.blogName,
     }
 }
-
 export const postsRepository = {
     async findAllPosts(): Promise<PostViewModel[]> {
         const posts = await postsCollection.find().toArray()
@@ -29,30 +28,17 @@ export const postsRepository = {
             return null;
         }
     },
-    async createPost(dataToCreate: PostInputModel): Promise<PostViewModel | null> {
-        const blogNameById = await blogsCollection.findOne({_id: new ObjectId(dataToCreate.blogId)})
-        if (blogNameById) {
-            const newPost: PostViewModel = {
-                title: dataToCreate.title,
-                shortDescription: dataToCreate.shortDescription,
-                content: dataToCreate.content,
-                createdAt: new Date().toISOString(),
-                blogId: dataToCreate.blogId,
-                blogName: blogNameById.name,
-            }
-            const createResult = await postsCollection.insertOne(newPost)
-            return {
-                id: createResult.insertedId.toString(),
-                title: newPost.title,
-                shortDescription: newPost.shortDescription,
-                content: newPost.content,
-                createdAt: newPost.createdAt,
-                blogId: newPost.blogId,
-                blogName: newPost.blogName
-            };
-        }
-        return null;
-
+    async createPost(newPost: PostViewModel): Promise<PostViewModel | null> {
+        const createResult = await postsCollection.insertOne(newPost)
+        return {
+            id: createResult.insertedId.toString(),
+            title: newPost.title,
+            shortDescription: newPost.shortDescription,
+            content: newPost.content,
+            createdAt: newPost.createdAt,
+            blogId: newPost.blogId,
+            blogName: newPost.blogName
+        };
     },
     async updatePost(id: string, dataToUpdate: PostInputModel): Promise<boolean> {
         const updateResult = await postsCollection.updateOne({_id: new ObjectId(id)}, {
@@ -72,7 +58,6 @@ export const postsRepository = {
         await postsCollection.deleteMany({})
     }
 }
-
 export const postQueryRepository = {
     async pagingFindPosts(pageNumber?: string, pageSize?: string, sortBy?: string, sortDirection?: string): Promise<PaginatorPostViewModel> {
         const dbPageNumber = pageNumber ? +pageNumber : 1
