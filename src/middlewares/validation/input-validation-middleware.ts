@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {validationResult} from "express-validator";
-import {CodeResponsesEnum} from "../../types/types";
+import {CodeResponsesEnum} from "../../utils/utils"
 
 
 export const inputValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
