@@ -33,6 +33,7 @@ export const usersRepository = {
     }
 }
 export const usersQueryRepository = {
+    // test
     async foundUsers(queryParameters: QueryUsersInputModel): Promise<PaginatorUserViewModel> {
         const {sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm} = queryParameters
         const dbSortBy = sortBy || 'createdAt'
