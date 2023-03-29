@@ -1,12 +1,12 @@
 import {Response, Router} from "express";
 import {
-    CodeResponsesEnum,
     RequestWithBody,
     RequestWithParams,
     RequestWithParamsAndBody,
     RequestWithParamsAndQuery,
     RequestWithQuery,
 } from "../types/types";
+import {CodeResponsesEnum} from "../utils/utils";
 import {blogQueryRepository} from "../repositories/Mongo/blogs-db-repository";
 import {BlogInputModel} from "../models/BlogsModels/BlogInputModel";
 import {createBlogValidation, updateBlogValidation} from "../middlewares/validation/blogs/blogs-validation.middleware";

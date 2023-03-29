@@ -1,11 +1,11 @@
 import {Response, Router} from "express";
 import {
-    CodeResponsesEnum,
     RequestWithBody,
     RequestWithParams,
     RequestWithParamsAndBody,
     RequestWithQuery
 } from "../types/types";
+import {CodeResponsesEnum} from "../utils/utils";
 import {PostInputModel} from "../models/PostsModels/PostInputModel";
 import {authMiddleware} from "../middlewares/authorization-middleware";
 import {createPostValidation, updatePostValidation} from "../middlewares/validation/posts/posts-validation.middleware";
