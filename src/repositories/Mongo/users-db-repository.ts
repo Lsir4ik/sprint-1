@@ -9,7 +9,7 @@ function userTypeMapping(user: any): UserViewModel {
     return {
         id: user._id.toString(),
         login: user.login,
-        email: user.login,
+        email: user.email,
         createdAt: user.createdAt
     }
 }
@@ -30,6 +30,9 @@ export const usersRepository = {
     async findByLoginOrEmail(loginOrEmail: string) {
         const user = await usersCollection.findOne({$or: [{email: loginOrEmail},{email: loginOrEmail}]})
         return user
+    },
+    async deleteAllUsers(): Promise<void> {
+        await usersCollection.deleteMany()
     }
 }
 export const usersQueryRepository = {
@@ -44,8 +47,23 @@ export const usersQueryRepository = {
         const dbSearchLoginTerm = searchLoginTerm || null
         const dbSearchEmailTerm = searchEmailTerm || null
         const dbLoginSearchRegex = new RegExp(`${dbSearchLoginTerm}`, 'i')
-        const dbEmailSearchRegex = new RegExp(`${dbSearchEmailTerm},`, 'i')
-        const dbSearchFilter = {$or: [{login: {$regex: dbLoginSearchRegex}}, {email: {$regex: dbEmailSearchRegex}}]}
+        const dbEmailSearchRegex = new RegExp(`${dbSearchEmailTerm}`, 'i')
+        let dbSearchFilter = null
+        if (dbSearchLoginTerm) {
+            if (dbSearchEmailTerm) {
+                dbSearchFilter = {$and: [{login: {$regex: dbLoginSearchRegex}}, {email: {$regex: dbEmailSearchRegex}}]}
+            } else {
+                dbSearchFilter = {login: {$regex: dbLoginSearchRegex}}
+            }
+        } else {
+            if (dbSearchEmailTerm) {
+                dbSearchFilter = {email: {$regex: dbEmailSearchRegex}}
+            } else {
+                dbSearchFilter = {}
+            }
+        }
+
+        console.log(dbSearchFilter);
         const foundUsers = await usersCollection.find(dbSearchFilter)
             .sort({[dbSortBy]: dbSortDirection})
             .skip(dbUsersToSkip)
