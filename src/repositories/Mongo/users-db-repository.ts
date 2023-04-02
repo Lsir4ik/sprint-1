@@ -51,7 +51,7 @@ export const usersQueryRepository = {
         let dbSearchFilter = null
         if (dbSearchLoginTerm) {
             if (dbSearchEmailTerm) {
-                dbSearchFilter = {$and: [{login: {$regex: dbLoginSearchRegex}}, {email: {$regex: dbEmailSearchRegex}}]}
+                dbSearchFilter = {$or: [{login: {$regex: dbLoginSearchRegex}}, {email: {$regex: dbEmailSearchRegex}}]}
             } else {
                 dbSearchFilter = {login: {$regex: dbLoginSearchRegex}}
             }
