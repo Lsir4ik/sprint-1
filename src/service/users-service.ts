@@ -25,7 +25,7 @@ export const usersService = {
         if (!user) return false
         const saltFromHashedPassword = user.passwordHash.split('$')[3].slice(0, 22)
         const passwordHash = await this._generateHash(password, saltFromHashedPassword)
-        return saltFromHashedPassword === passwordHash;
+        return user.passwordHash === passwordHash;
 
     },
     async _generateHash(password: string, salt: string) {
