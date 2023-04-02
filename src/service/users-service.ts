@@ -9,7 +9,9 @@ export const usersService = {
     async createUser(dataToCreateUser: UserInputModel): Promise<UserViewModel> {
         const {login, password, email} = dataToCreateUser
         const passwordSalt = await bcrypt.genSalt(10)
+        console.log(passwordSalt);
         const passwordHashed = await this._generateHash(password, passwordSalt)
+        console.log(passwordHashed);
 
         const newUser: UserDBType = {
             login: login,
@@ -23,8 +25,10 @@ export const usersService = {
         const {loginOrEmail, password} = dataToCheck
         const user = await usersRepository.findByLoginOrEmail(loginOrEmail)
         if (!user) return false
-        const saltFromHashedPassword = user.passwordHash.split('$')[3].slice(0, 22)
+        const saltFromHashedPassword = user.passwordHash.slice(0, 29)
+        console.log(saltFromHashedPassword);
         const passwordHash = await this._generateHash(password, saltFromHashedPassword)
+
         return user.passwordHash === passwordHash;
 
     },

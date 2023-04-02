@@ -8,8 +8,8 @@ import {UserDBType} from "../models/UsersModels/UserDBType";
 dotenv.config()
 
 // Connection URL
-const url = process.env.MONGO_URL
-// const url = 'mongodb://0.0.0.0:27017' // local
+// const url = process.env.MONGO_URL
+const url = 'mongodb://0.0.0.0:27017' // local
 console.log('url: ', url);
 if (!url) {
     throw new Error('URL did not find')
