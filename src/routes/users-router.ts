@@ -20,7 +20,7 @@ usersRouter.post('/', authMiddleware, createUserValidation, async (req: RequestW
     const newUser = await usersService.createUser(req.body)
     res.status(CodeResponsesEnum.Created_201).send(newUser)
 })
-usersRouter.delete('/', authMiddleware, async (req: RequestWithParams<{ id: string }>, res: Response) => {
+usersRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<{ id: string }>, res: Response) => {
     const isDelete = await usersService.deleteUserById(req.params.id)
     if (isDelete) return res.sendStatus(CodeResponsesEnum.No_Content_204)
     return res.sendStatus(CodeResponsesEnum.Not_Found_404)
