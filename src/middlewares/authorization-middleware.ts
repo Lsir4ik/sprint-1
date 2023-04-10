@@ -1,4 +1,25 @@
 import {NextFunction, Request, Response} from "express";
+import {CodeResponsesEnum} from "../utils/utils";
+import {jwtService} from "../domain/jwtService";
+import {usersService} from "../domain/users-service";
+
+// Bearer AUTH
+export const authBearerMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    if(!req.headers.authorization) {
+       res.send(CodeResponsesEnum.Unauthorized_401)
+       return
+    }
+    const token = req.headers.authorization.split(' ')[1]
+    const userId = await jwtService.getUserIdByToken(token)
+    if (userId) {
+        req.user = await usersService.findUserById(userId)
+        next()
+    }
+    res.send(CodeResponsesEnum.Unauthorized_401)
+}
+
+
+// Basic AUTH
 
 const users = [
     {login: 'admin', password: 'qwerty'}
@@ -8,7 +29,7 @@ let data = `${users[0].login}:${users[0].password}`
 let buff = Buffer.from(data)
 let base64data = buff.toString('base64')
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const authBasicMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
     let authHeader = req.headers.authorization
     if (!authHeader) {

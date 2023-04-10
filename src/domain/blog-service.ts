@@ -2,8 +2,8 @@ import {BlogViewModel} from "../models/BlogsModels/BlogViewModel";
 import {BlogInputModel} from "../models/BlogsModels/BlogInputModel";
 import {PostViewModel} from "../models/PostsModels/PostViewModel";
 import {BlogPostInputModel} from "../models/BlogsModels/BlogPostInputModel";
-import {blogsRepository} from "../repositories/Mongo/blogs-db-repository";
-import {postsRepository} from "../repositories/Mongo/posts-db-repository";
+import {blogsRepository} from "../repositories/blogs-db-repository";
+import {postsRepository} from "../repositories/posts-db-repository";
 
 export const blogsService = {
     async findBlogById(id: string): Promise<BlogViewModel | null> {

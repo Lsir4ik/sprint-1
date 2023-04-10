@@ -1,8 +1,8 @@
 import {Request, Response, Router} from "express";
 import {CodeResponsesEnum} from "../utils/utils";
-import {blogsService} from "../service/blog-service";
-import {postsService} from "../service/post-service";
-import {usersService} from "../service/users-service";
+import {blogsService} from "../domain/blog-service";
+import {postsService} from "../domain/post-service";
+import {usersService} from "../domain/users-service";
 
 export const testingRouter = Router();
 

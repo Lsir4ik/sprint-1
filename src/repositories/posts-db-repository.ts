@@ -1,8 +1,8 @@
-import {PostViewModel} from "../../models/PostsModels/PostViewModel";
-import {PostInputModel} from "../../models/PostsModels/PostInputModel";
-import {blogsCollection, postsCollection} from "../../db/db";
+import {PostViewModel} from "../models/PostsModels/PostViewModel";
+import {PostInputModel} from "../models/PostsModels/PostInputModel";
+import {blogsCollection, postsCollection} from "../db/db";
 import {ObjectId} from "mongodb";
-import {PaginatorPostViewModel} from "../../models/PostsModels/PaginatorPostViewModel";
+import {PaginatorPostViewModel} from "../models/PostsModels/PaginatorPostViewModel";
 
 export function postTypeMapping(post: any): PostViewModel {
     return {

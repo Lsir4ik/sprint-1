@@ -2,18 +2,18 @@ import {UserViewModel} from "../models/UsersModels/UserViewModel";
 import {UserInputModel} from "../models/UsersModels/UserInputModel";
 import bcrypt from "bcrypt";
 import {UserDBType} from "../models/UsersModels/UserDBType";
-import {usersRepository} from "../repositories/Mongo/users-db-repository";
+import {usersRepository} from "../repositories/users-db-repository";
 import {LoginInputModel} from "../models/AuthModels/LoginInputModel";
+import {MeViewModel} from "../models/AuthModels/MeViewModel";
 
 export const usersService = {
     async createUser(dataToCreateUser: UserInputModel): Promise<UserViewModel> {
         const {login, password, email} = dataToCreateUser
         const passwordSalt = await bcrypt.genSalt(10)
-        console.log(passwordSalt);
         const passwordHashed = await this._generateHash(password, passwordSalt)
-        console.log(passwordHashed);
 
         const newUser: UserDBType = {
+            // TODO ID в отдельном типе (наследование)
             login: login,
             email: email,
             passwordHash: passwordHashed,
@@ -21,20 +21,34 @@ export const usersService = {
         }
         return usersRepository.createUser(newUser)
     },
-    async checkCredentials(dataToCheck: LoginInputModel): Promise<boolean> {
+    async checkCredentials(dataToCheck: LoginInputModel): Promise<UserDBType | null> {
         const {loginOrEmail, password} = dataToCheck
         const user = await usersRepository.findByLoginOrEmail(loginOrEmail)
-        if (!user) return false
+        if (!user) return null
         const saltFromHashedPassword = user.passwordHash.slice(0, 29)
-        console.log(saltFromHashedPassword);
         const passwordHash = await this._generateHash(password, saltFromHashedPassword)
 
-        return user.passwordHash === passwordHash;
+        if (user.passwordHash === passwordHash) return user
+        return null
 
     },
     async _generateHash(password: string, salt: string) {
-        const hash = await bcrypt.hash(password, salt)
+        const hash = await bcrypt.hash(password, 10)
         return hash
+    },
+    async findUserById(userId: string): Promise<UserDBType | null> {
+        const foundUser = await usersRepository.findUserById(userId)
+        if (foundUser) return foundUser
+        return null
+    },
+    async findMeById(userId: string): Promise<MeViewModel | null> {
+        const foundUser = await usersRepository.findUserById(userId)
+        if (foundUser) return {
+            email: foundUser.email,
+            login: foundUser.login,
+            userId: userId
+        }
+        return null
     },
     async deleteUserById(id: string): Promise<boolean> {
         const isDeleted = await usersRepository.deleteUserById(id)

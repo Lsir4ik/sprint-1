@@ -1,9 +1,9 @@
-import {BlogViewModel} from "../../models/BlogsModels/BlogViewModel";
-import {BlogInputModel} from "../../models/BlogsModels/BlogInputModel";
-import {blogsCollection, postsCollection} from "../../db/db";
+import {BlogViewModel} from "../models/BlogsModels/BlogViewModel";
+import {BlogInputModel} from "../models/BlogsModels/BlogInputModel";
+import {blogsCollection, postsCollection} from "../db/db";
 import {ObjectId} from "mongodb";
-import {PaginatorBlogViewModel} from "../../models/BlogsModels/PaginatorBlogViewModel";
-import {PaginatorPostViewModel} from "../../models/PostsModels/PaginatorPostViewModel";
+import {PaginatorBlogViewModel} from "../models/BlogsModels/PaginatorBlogViewModel";
+import {PaginatorPostViewModel} from "../models/PostsModels/PaginatorPostViewModel";
 import {postTypeMapping} from "./posts-db-repository";
 
 function blogTypeMapping(blog: any): BlogViewModel {

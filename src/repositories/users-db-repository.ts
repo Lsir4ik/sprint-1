@@ -1,8 +1,8 @@
-import {PaginatorUserViewModel} from "../../models/UsersModels/PaginatorUserViewModel";
-import {QueryUsersInputModel} from "../../models/UsersModels/QueryUsersInputModel";
-import {UserViewModel} from "../../models/UsersModels/UserViewModel";
-import {UserDBType} from "../../models/UsersModels/UserDBType";
-import {usersCollection} from "../../db/db";
+import {PaginatorUserViewModel} from "../models/UsersModels/PaginatorUserViewModel";
+import {QueryUsersInputModel} from "../models/UsersModels/QueryUsersInputModel";
+import {UserViewModel} from "../models/UsersModels/UserViewModel";
+import {UserDBType} from "../models/UsersModels/UserDBType";
+import {usersCollection} from "../db/db";
 import {ObjectId} from "mongodb";
 
 function userTypeMapping(user: any): UserViewModel {
@@ -31,6 +31,10 @@ export const usersRepository = {
         const user = await usersCollection.findOne({$or: [{email: loginOrEmail},{login: loginOrEmail}]})
         return user
     },
+    async findUserById(userId: string): Promise<UserDBType | null> {
+        const foundUser = await usersCollection.findOne({_Id: new ObjectId(userId)})
+        return foundUser
+    },
     async deleteAllUsers(): Promise<void> {
         await usersCollection.deleteMany()
     }
@@ -48,23 +52,18 @@ export const usersQueryRepository = {
         const dbSearchEmailTerm = searchEmailTerm || null
         const dbLoginSearchRegex = new RegExp(`${dbSearchLoginTerm}`, 'i')
         const dbEmailSearchRegex = new RegExp(`${dbSearchEmailTerm}`, 'i')
-        let dbSearchFilter = null
-        if (dbSearchLoginTerm) {
-            if (dbSearchEmailTerm) {
-                dbSearchFilter = {$or: [{login: {$regex: dbLoginSearchRegex}}, {email: {$regex: dbEmailSearchRegex}}]}
-            } else {
-                dbSearchFilter = {login: {$regex: dbLoginSearchRegex}}
-            }
-        } else {
-            if (dbSearchEmailTerm) {
-                dbSearchFilter = {email: {$regex: dbEmailSearchRegex}}
-            } else {
-                dbSearchFilter = {}
-            }
+        let dbSearchFilter = []
+
+        if(dbSearchLoginTerm) {
+            dbSearchFilter.push({login: {$regex: dbLoginSearchRegex}})
+        }
+
+        if(dbSearchEmailTerm) {
+            dbSearchFilter.push({email: {$regex: dbEmailSearchRegex}})
         }
 
         console.log(dbSearchFilter);
-        const foundUsers = await usersCollection.find(dbSearchFilter)
+        const foundUsers = await usersCollection.find({$or: []})
             .sort({[dbSortBy]: dbSortDirection})
             .skip(dbUsersToSkip)
             .limit(dbPageSize)

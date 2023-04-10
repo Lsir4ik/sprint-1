@@ -1,5 +1,5 @@
 export type UserViewModel = {
-    id?: string
+    id: string
     login: string
     email: string
     createdAt: string

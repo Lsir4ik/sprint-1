@@ -1,7 +1,7 @@
 import {PostViewModel} from "../models/PostsModels/PostViewModel";
 import {PostInputModel} from "../models/PostsModels/PostInputModel";
-import {postsRepository} from "../repositories/Mongo/posts-db-repository";
-import {blogsRepository} from "../repositories/Mongo/blogs-db-repository";
+import {postsRepository} from "../repositories/posts-db-repository";
+import {blogsRepository} from "../repositories/blogs-db-repository";
 
 export const postsService = {
     async findPostById(id: string): Promise<PostViewModel | null> {
