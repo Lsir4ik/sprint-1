@@ -22,15 +22,16 @@ postsRouter.post('/:id/comments', authBearerMiddleware, createCommentValidation,
     const createdComment = await commentsService.sendFeedback(req.params.id, req.body.content, req.user!.id)
     return res.status(CodeResponsesEnum.Created_201).send(createdComment)
 });
+postsRouter.get('/:id/comments', async (req: Request, res: Response) => {
+    const foundPost = await postsService.findPostById(req.params.id)
+    if (!foundPost) return res.sendStatus(CodeResponsesEnum.Not_Found_404)
+
+    const foundCommentsOfPost = await postQueryRepository.findCommentsOfPost(req.params.id, req.query)
+    return res.sendStatus(CodeResponsesEnum.OK_200).send(foundCommentsOfPost)
+})
 
 postsRouter.get('/', async (req: RequestWithQuery<QueryPostInputModel>, res: Response) => {
-    const foundPosts = await postQueryRepository.pagingFindPosts(
-        // TODO Убрать в сервис
-        req.query.pageNumber,
-        req.query.pageSize,
-        req.query.sortBy,
-        req.query.sortDirection
-    )
+    const foundPosts = await postQueryRepository.pagingFindPosts(req.query)
     res.status(CodeResponsesEnum.OK_200).send(foundPosts);
 });
 postsRouter.post('/', authBasicMiddleware, createPostValidation, async (req: RequestWithBody<PostInputModel>, res: Response) => {

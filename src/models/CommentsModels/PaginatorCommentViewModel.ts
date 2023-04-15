@@ -1,9 +1,9 @@
 import {CommentViewModel} from "./CommentViewModel";
 
 export type PaginatorCommentViewModel = {
-    pagesCount: string
-    page: string
-    pageSize: string
-    totalCount: string
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
     items: Array<CommentViewModel>
 }

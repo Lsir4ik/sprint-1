@@ -2,8 +2,7 @@ import {MongoClient} from "mongodb";
 import dotenv from 'dotenv'
 import {BlogViewModel} from "../models/BlogsModels/BlogViewModel";
 import {PostViewModel} from "../models/PostsModels/PostViewModel";
-import {UserDBType} from "../models/UsersModels/UserDBType";
-import {CommentViewModel} from "../models/CommentsModels/CommentViewModel";
+import {UserDBModel} from "../models/UsersModels/UserDBModel";
 import {CommentDBModel} from "../models/CommentsModels/CommentDBModel";
 
 
@@ -20,7 +19,7 @@ export const client = new MongoClient(url);
 const db = client.db('IncubTube');
 export const blogsCollection = db.collection<BlogViewModel>('blogs');
 export const postsCollection = db.collection<PostViewModel>('posts');
-export const usersCollection = db.collection<UserDBType>('users');
+export const usersCollection = db.collection<UserDBModel>('users');
 export const commentsCollection = db.collection<CommentDBModel>('comments')
 
 export const runDb = async () => {

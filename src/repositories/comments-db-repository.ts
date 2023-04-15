@@ -1,12 +1,10 @@
 import {commentsCollection} from "../db/db";
-import {CommentDBModel} from "../models/CommentsModels/CommentDBModel";
 import {CommentViewModel} from "../models/CommentsModels/CommentViewModel";
 import {CommentUpdateModel} from "../models/CommentsModels/CommentUpdateModel";
-import {ObjectId, WithId} from "mongodb";
+import {ObjectId} from "mongodb";
 import {CommentCreateModel} from "../models/CommentsModels/CommentCreateModel";
-import {CommentatorInfo} from "../models/CommentsModels/CommentatorInfo";
 
-function commentTypeMapping(comment: any): CommentViewModel {
+export function commentTypeMapping(comment: any): CommentViewModel {
     return {
         id: comment._id.toString(),
         content: comment.content,
@@ -15,7 +13,7 @@ function commentTypeMapping(comment: any): CommentViewModel {
     }
 }
 export const commentsRepository = {
-    async sendFeedback(newComment: WithId<CommentCreateModel>): Promise<CommentViewModel> {
+    async sendFeedback(newComment: CommentCreateModel): Promise<CommentViewModel> {
         const createResult = await commentsCollection.insertOne(newComment)
         return {
             id: createResult.insertedId.toString(),

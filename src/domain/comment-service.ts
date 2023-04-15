@@ -1,5 +1,4 @@
 import {CommentViewModel} from "../models/CommentsModels/CommentViewModel";
-import {CommentDBModel} from "../models/CommentsModels/CommentDBModel";
 import {usersService} from "./users-service";
 import {CommentatorInfo} from "../models/CommentsModels/CommentatorInfo";
 import {commentsRepository} from "../repositories/comments-db-repository";
@@ -37,7 +36,7 @@ export const commentsService = {
     async deleteCommentById(id: string): Promise<boolean> {
         return commentsRepository.deleteCommentById(id)
     },
-    async findCommentById(id:string): Promise<CommentDBModel>{
+    async findCommentById(id:string): Promise<CommentViewModel | null>{
         return commentsRepository.findCommentById(id)
     }
 

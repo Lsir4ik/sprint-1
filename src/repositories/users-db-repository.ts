@@ -1,11 +1,12 @@
 import {PaginatorUserViewModel} from "../models/UsersModels/PaginatorUserViewModel";
 import {QueryUsersInputModel} from "../models/UsersModels/QueryUsersInputModel";
 import {UserViewModel} from "../models/UsersModels/UserViewModel";
-import {UserDBType} from "../models/UsersModels/UserDBType";
+import {UserDBModel} from "../models/UsersModels/UserDBModel";
 import {usersCollection} from "../db/db";
-import {ObjectId} from "mongodb";
+import {ObjectId, WithId} from "mongodb";
+import {UserCreateModel} from "../models/UsersModels/UserCreateModel";
 
-function userTypeMapping(user: any): UserViewModel {
+export function userTypeMapping(user: any): UserViewModel {
     return {
         id: user._id.toString(),
         login: user.login,
@@ -14,7 +15,7 @@ function userTypeMapping(user: any): UserViewModel {
     }
 }
 export const usersRepository = {
-    async createUser(newUser: UserDBType): Promise<UserViewModel> {
+    async createUser(newUser: UserCreateModel): Promise<UserViewModel> {
         const createResult = await usersCollection.insertOne(newUser)
         return {
             id: createResult.insertedId.toString(),
@@ -27,13 +28,13 @@ export const usersRepository = {
         const deleteResult = await usersCollection.deleteOne({_id: new ObjectId(id)})
         return deleteResult.deletedCount === 1
     },
-    async findByLoginOrEmail(loginOrEmail: string) {
+    async findByLoginOrEmail(loginOrEmail: string): Promise<WithId<UserDBModel> | null> {
         const user = await usersCollection.findOne({$or: [{email: loginOrEmail},{login: loginOrEmail}]})
         return user
     },
-    async findUserById(userId: string): Promise<UserDBType | null> {
+    async findUserById(userId: string): Promise<UserViewModel | null> {
         const foundUser = await usersCollection.findOne({_Id: new ObjectId(userId)})
-        return foundUser
+        return userTypeMapping(foundUser)
     },
     async deleteAllUsers(): Promise<void> {
         await usersCollection.deleteMany()
@@ -52,7 +53,8 @@ export const usersQueryRepository = {
         const dbSearchEmailTerm = searchEmailTerm || null
         const dbLoginSearchRegex = new RegExp(`${dbSearchLoginTerm}`, 'i')
         const dbEmailSearchRegex = new RegExp(`${dbSearchEmailTerm}`, 'i')
-        let dbSearchFilter = []
+        // FIXME Пустой массив на уроке надо было пофиксить
+        const dbSearchFilter = []
 
         if(dbSearchLoginTerm) {
             dbSearchFilter.push({login: {$regex: dbLoginSearchRegex}})
@@ -63,7 +65,7 @@ export const usersQueryRepository = {
         }
 
         console.log(dbSearchFilter);
-        const foundUsers = await usersCollection.find({$or: []})
+        const foundUsers = await usersCollection.find({$or: dbSearchFilter})
             .sort({[dbSortBy]: dbSortDirection})
             .skip(dbUsersToSkip)
             .limit(dbPageSize)

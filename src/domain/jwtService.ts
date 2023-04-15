@@ -1,10 +1,10 @@
-import {UserDBType} from "../models/UsersModels/UserDBType";
 import jwt from 'jsonwebtoken'
 import {LoginSuccessViewModel} from "../models/AuthModels/LoginSuccessViewModel";
+import {UserViewModel} from "../models/UsersModels/UserViewModel";
 
 const JWT_SECRET = process.env.JWT_SECRET || 'Pass321PJWT'
 export const jwtService = {
-    async createJWT(user: UserDBType): Promise<LoginSuccessViewModel> {
+    async createJWT(user: UserViewModel): Promise<LoginSuccessViewModel> {
         const token = jwt.sign({userId: user.id}, JWT_SECRET, {expiresIn:'1h'})
         return {
             accessToken: token

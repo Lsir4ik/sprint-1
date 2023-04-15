@@ -1,8 +1,12 @@
 import {PostViewModel} from "../models/PostsModels/PostViewModel";
 import {PostInputModel} from "../models/PostsModels/PostInputModel";
-import {blogsCollection, postsCollection} from "../db/db";
+import {commentsCollection, postsCollection} from "../db/db";
 import {ObjectId} from "mongodb";
 import {PaginatorPostViewModel} from "../models/PostsModels/PaginatorPostViewModel";
+import {PaginatorCommentInputModel} from "../models/CommentsModels/PaginatorCommentInputModel";
+import {PaginatorCommentViewModel} from "../models/CommentsModels/PaginatorCommentViewModel";
+import {commentTypeMapping} from "./comments-db-repository";
+import {PaginatorPostInputModel} from "../models/PostsModels/PaginatorPostInputModel";
 
 export function postTypeMapping(post: any): PostViewModel {
     return {
@@ -15,6 +19,7 @@ export function postTypeMapping(post: any): PostViewModel {
         blogName: post.blogName,
     }
 }
+
 export const postsRepository = {
     async findAllPosts(): Promise<PostViewModel[]> {
         const posts = await postsCollection.find().toArray()
@@ -59,7 +64,8 @@ export const postsRepository = {
     }
 }
 export const postQueryRepository = {
-    async pagingFindPosts(pageNumber?: string, pageSize?: string, sortBy?: string, sortDirection?: string): Promise<PaginatorPostViewModel> {
+    async pagingFindPosts(pagingData: PaginatorPostInputModel): Promise<PaginatorPostViewModel> {
+        const {pageNumber, pageSize, sortBy, sortDirection} = pagingData
         const dbPageNumber = pageNumber ? +pageNumber : 1
         const dbPageSize = pageSize ? +pageSize : 10
         const dbSortBy = sortBy || 'createdAt'
@@ -83,5 +89,30 @@ export const postQueryRepository = {
             items: formatFoundPosts
         }
 
+    },
+    async findCommentsOfPost(id: string, paggingData: PaginatorCommentInputModel): Promise<PaginatorCommentViewModel> {
+        const {pageNumber, pageSize, sortBy, sortDirection} = paggingData
+        const dbPageNumber = pageNumber ? +pageNumber : 1
+        const dbPageSize = pageSize ? +pageSize : 1
+        const dbSortBy = sortBy || 'createdAt'
+        const dbSortDirection = sortDirection ? sortDirection === 'asc' ? 1 : -1 : -1
+        const dbCommentsToSkip = (dbPageNumber - 1) * dbPageSize
+
+        const foundCommentsOfPost = await commentsCollection.find({postId: id})
+            .sort({[dbSortBy]: dbSortDirection})
+            .skip(dbCommentsToSkip)
+            .limit(dbPageSize)
+            .toArray()
+
+        const totalCountOfCommentsOfPost = await commentsCollection.countDocuments({postId: id})
+        const pagesCountOfCommentsOfPost = Math.ceil(totalCountOfCommentsOfPost / dbPageSize)
+        const formatFoundCommentsOfPost = foundCommentsOfPost.map(commentTypeMapping)
+        return {
+            pagesCount: pagesCountOfCommentsOfPost,
+            page: dbPageNumber,
+            pageSize: dbPageSize,
+            totalCount: totalCountOfCommentsOfPost,
+            items: formatFoundCommentsOfPost
+        }
     }
 }
