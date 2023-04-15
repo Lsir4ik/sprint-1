@@ -5,6 +5,7 @@ import {UserDBType} from "../models/UsersModels/UserDBType";
 import {usersRepository} from "../repositories/users-db-repository";
 import {LoginInputModel} from "../models/AuthModels/LoginInputModel";
 import {MeViewModel} from "../models/AuthModels/MeViewModel";
+import {UserCreateModel} from "../models/UsersModels/UserCreateModel";
 
 export const usersService = {
     async createUser(dataToCreateUser: UserInputModel): Promise<UserViewModel> {
@@ -12,8 +13,7 @@ export const usersService = {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHashed = await this._generateHash(password, passwordSalt)
 
-        const newUser: UserDBType = {
-            // TODO ID в отдельном типе (наследование)
+        const newUser: UserCreateModel = {
             login: login,
             email: email,
             passwordHash: passwordHashed,

@@ -19,12 +19,13 @@ postsRouter.post('/:id/comments', authBearerMiddleware, createCommentValidation,
     const foundPost = await postsService.findPostById(req.params.id)
     if (!foundPost) return res.sendStatus(CodeResponsesEnum.Not_Found_404)
 
-    const createdComment = await commentsService.sendFeedback(req.body.content, req.user!.id)
+    const createdComment = await commentsService.sendFeedback(req.params.id, req.body.content, req.user!.id)
     return res.status(CodeResponsesEnum.Created_201).send(createdComment)
 });
 
 postsRouter.get('/', async (req: RequestWithQuery<QueryPostInputModel>, res: Response) => {
     const foundPosts = await postQueryRepository.pagingFindPosts(
+        // TODO Убрать в сервис
         req.query.pageNumber,
         req.query.pageSize,
         req.query.sortBy,

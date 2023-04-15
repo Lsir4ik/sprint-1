@@ -6,7 +6,7 @@ import {usersQueryRepository} from "../repositories/users-db-repository";
 import {CodeResponsesEnum} from "../utils/utils";
 import {usersService} from "../domain/users-service";
 import {authBasicMiddleware} from "../middlewares/authorization-middleware";
-import {createUserValidation} from "../middlewares/auth-middleware";
+import {createUserValidation} from "../middlewares/validation/login-middleware";
 
 export const usersRouter = Router();
 

@@ -3,7 +3,7 @@ import {RequestWithBody} from "../types/types";
 import {LoginInputModel} from "../models/AuthModels/LoginInputModel";
 import {CodeResponsesEnum} from "../utils/utils";
 import {usersService} from "../domain/users-service";
-import {loginInputValidation} from "../middlewares/auth-middleware";
+import {loginInputValidation} from "../middlewares/validation/login-middleware";
 import {jwtService} from "../domain/jwtService";
 import {authBasicMiddleware, authBearerMiddleware} from "../middlewares/authorization-middleware";
 

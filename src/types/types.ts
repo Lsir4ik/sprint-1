@@ -1,5 +1,4 @@
 import {Request} from "express";
-import {UserDBType} from "../models/UsersModels/UserDBType";
 
 
 export type RequestWithParams<T> = Request<T>
