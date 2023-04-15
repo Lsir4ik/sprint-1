@@ -21,7 +21,6 @@ postsRouter.post('/:id/comments', authBearerMiddleware, createCommentValidation,
 
     const createdComment = await commentsService.sendFeedback(req.body.content, req.user!.id)
     return res.status(CodeResponsesEnum.Created_201).send(createdComment)
-
 });
 
 postsRouter.get('/', async (req: RequestWithQuery<QueryPostInputModel>, res: Response) => {

@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 import {BlogViewModel} from "../models/BlogsModels/BlogViewModel";
 import {PostViewModel} from "../models/PostsModels/PostViewModel";
 import {UserDBType} from "../models/UsersModels/UserDBType";
+import {CommentViewModel} from "../models/CommentsModels/CommentViewModel";
+import {CommentDBModel} from "../models/CommentsModels/CommentDBModel";
 
 
 dotenv.config()
@@ -19,6 +21,7 @@ const db = client.db('IncubTube');
 export const blogsCollection = db.collection<BlogViewModel>('blogs');
 export const postsCollection = db.collection<PostViewModel>('posts');
 export const usersCollection = db.collection<UserDBType>('users');
+export const commentsCollection = db.collection<CommentDBModel>('comments')
 
 export const runDb = async () => {
     try {
