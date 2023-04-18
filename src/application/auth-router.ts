@@ -1,11 +1,11 @@
-import {Router, Response, Request} from "express";
+import {Request, Response, Router} from "express";
 import {RequestWithBody} from "../types/types";
 import {LoginInputModel} from "../models/AuthModels/LoginInputModel";
 import {CodeResponsesEnum} from "../utils/utils";
 import {usersService} from "../domain/users-service";
 import {loginInputValidation} from "../middlewares/validation/login-middleware";
 import {jwtService} from "../domain/jwtService";
-import {authBasicMiddleware, authBearerMiddleware} from "../middlewares/authorization-middleware";
+import {authBearerMiddleware} from "../middlewares/authorization-middleware";
 
 export const authRouter = Router();
 
@@ -16,6 +16,7 @@ authRouter.post('/', loginInputValidation, async (req: RequestWithBody<LoginInpu
         res.status(CodeResponsesEnum.OK_200).send(token)
     } else {
         res.sendStatus(CodeResponsesEnum.Unauthorized_401)
+        return
     }
 })
 authRouter.get('/', authBearerMiddleware, async (req: Request, res: Response) => {

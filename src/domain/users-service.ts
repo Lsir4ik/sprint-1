@@ -10,7 +10,7 @@ export const usersService = {
     async createUser(dataToCreateUser: UserInputModel): Promise<UserViewModel> {
         const {login, password, email} = dataToCreateUser
         const passwordSalt = await bcrypt.genSalt(10)
-        const passwordHashed = await this._generateHash(password)
+        const passwordHashed = await this._generateHash(password, passwordSalt)
 
         const newUser: UserCreateModel = {
             login: login,
@@ -22,17 +22,16 @@ export const usersService = {
     },
     async checkCredentials(dataToCheck: LoginInputModel): Promise<UserViewModel | null> {
         const {loginOrEmail, password} = dataToCheck
-        const user = await usersRepository.findByLoginOrEmail(loginOrEmail)
+        const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
         if (!user) return null
         const saltFromHashedPassword = user.passwordHash.slice(0, 29)
-        const passwordHash = await this._generateHash(password)
-
+        const passwordHash = await this._generateHash(password, saltFromHashedPassword)
         if (user.passwordHash === passwordHash) return userTypeMapping(user)
         return null
 
     },
-    async _generateHash(password: string) {
-        const hash = await bcrypt.hash(password, 10)
+    async _generateHash(password: string, salt: string) {
+        const hash = await bcrypt.hash(password, salt)
         return hash
     },
     async findUserById(userId: string): Promise<UserViewModel | null> {
