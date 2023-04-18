@@ -53,8 +53,22 @@ export const usersQueryRepository = {
         const dbSearchEmailTerm = searchEmailTerm || null
         const dbLoginSearchRegex = new RegExp(`${dbSearchLoginTerm}`, 'i')
         const dbEmailSearchRegex = new RegExp(`${dbSearchEmailTerm}`, 'i')
-        // FIXME Пустой массив на уроке надо было пофиксить
-        const dbSearchFilter = []
+        // TODO Пустой массив на уроке надо было пофиксить
+        let dbSearchFilter = {}
+        if (dbSearchLoginTerm) {
+            if (dbSearchEmailTerm) {
+                dbSearchFilter = {$or: [{login: {$regex: dbLoginSearchRegex}}, {email: {$regex: dbEmailSearchRegex}}]}
+            } else {
+                dbSearchFilter = {login: {$regex: dbLoginSearchRegex}}
+            }
+        } else {
+            if (dbSearchEmailTerm) {
+                dbSearchFilter = {email: {$regex: dbEmailSearchRegex}}
+            } else {
+                dbSearchFilter = {}
+            }
+        }
+        /*const dbSearchFilter = []
 
         if(dbSearchLoginTerm) {
             dbSearchFilter.push({login: {$regex: dbLoginSearchRegex}})
@@ -62,10 +76,8 @@ export const usersQueryRepository = {
 
         if(dbSearchEmailTerm) {
             dbSearchFilter.push({email: {$regex: dbEmailSearchRegex}})
-        }
-
-        console.log(dbSearchFilter);
-        const foundUsers = await usersCollection.find({$or: dbSearchFilter})
+        }*/
+        const foundUsers = await usersCollection.find(dbSearchFilter)
             .sort({[dbSortBy]: dbSortDirection})
             .skip(dbUsersToSkip)
             .limit(dbPageSize)

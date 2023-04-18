@@ -39,5 +39,4 @@ export const commentsService = {
     async findCommentById(id:string): Promise<CommentViewModel | null>{
         return commentsRepository.findCommentById(id)
     }
-
 }

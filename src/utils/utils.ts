@@ -5,7 +5,7 @@ export enum CodeResponsesEnum {
     Bad_Request_400 = 400,
     Unauthorized_401 = 401,
     Not_Found_404 = 404,
-
+    Forbidden_403 = 403,
 }
 export enum SortDirections {
     asc = 1,
