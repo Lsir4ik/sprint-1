@@ -25,6 +25,7 @@ commentsRouter.delete('/:id', authBearerMiddleware, async (req: Request, res: Re
 })
 commentsRouter.get('/:id', async (req:Request, res: Response) => {
     const foundComment = await commentsService.findCommentById(req.params.id)
-    if (foundComment) return res.sendStatus(CodeResponsesEnum.OK_200).send(foundComment)
+    console.log(foundComment);
+    if (foundComment) return res.status(CodeResponsesEnum.OK_200).send(foundComment)
     return res.sendStatus(CodeResponsesEnum.Not_Found_404)
 })

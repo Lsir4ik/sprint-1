@@ -13,9 +13,7 @@ import {createCommentValidation} from "../middlewares/validation/comments/commen
 export const postsRouter = Router();
 postsRouter.post('/:id/comments', authBearerMiddleware, createCommentValidation, async (req: Request, res: Response) => {
     const foundPost = await postsService.findPostById(req.params.id)
-    console.log(foundPost);
     if (!foundPost) return res.sendStatus(CodeResponsesEnum.Not_Found_404)
-
     const createdComment = await commentsService.sendFeedback(req.params.id, req.body.content, req.user!.id)
     return res.status(CodeResponsesEnum.Created_201).send(createdComment)
 });
