@@ -89,10 +89,10 @@ export const postQueryRepository = {
             items: formatFoundPosts
         }
     },
-    async findCommentsOfPost(id: string, paggingData: PaginatorCommentInputModel): Promise<PaginatorCommentViewModel> {
-        const {pageNumber, pageSize, sortBy, sortDirection} = paggingData
+    async findCommentsOfPost(id: string, pagingData: PaginatorCommentInputModel): Promise<PaginatorCommentViewModel> {
+        const {pageNumber, pageSize, sortBy, sortDirection} = pagingData
         const dbPageNumber = pageNumber ? +pageNumber : 1
-        const dbPageSize = pageSize ? +pageSize : 1
+        const dbPageSize = pageSize ? +pageSize : 10
         const dbSortBy = sortBy || 'createdAt'
         const dbSortDirection = sortDirection ? sortDirection === 'asc' ? 1 : -1 : -1
         const dbCommentsToSkip = (dbPageNumber - 1) * dbPageSize
