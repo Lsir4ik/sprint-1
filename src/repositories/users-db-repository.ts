@@ -14,6 +14,7 @@ export function userTypeMapping(user: any): UserViewModel {
         createdAt: user.createdAt
     }
 }
+
 export const usersRepository = {
     async createUser(newUser: UserCreateModel): Promise<UserViewModel> {
         const createResult = await usersCollection.insertOne(newUser)
@@ -29,12 +30,13 @@ export const usersRepository = {
         return deleteResult.deletedCount === 1
     },
     async findUserByLoginOrEmail(loginOrEmail: string): Promise<WithId<UserDBModel> | null> {
-        const user = await usersCollection.findOne({$or: [{email: loginOrEmail},{login: loginOrEmail}]})
+        const user = await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
         return user
     },
     async findUserById(userId: string): Promise<UserViewModel | null> {
-        const foundUser = await usersCollection.findOne({_Id: new ObjectId(userId)})
-        return userTypeMapping(foundUser)
+        const foundUser = await usersCollection.findOne({_id: new ObjectId(userId)})
+        if (foundUser) return userTypeMapping(foundUser)
+        return null
     },
     async deleteAllUsers(): Promise<void> {
         await usersCollection.deleteMany()
@@ -83,7 +85,7 @@ export const usersQueryRepository = {
             .limit(dbPageSize)
             .toArray()
         const totalCountOfUsers = await usersCollection.countDocuments(dbSearchFilter)
-        const pagesCount = Math.ceil(totalCountOfUsers/dbPageSize)
+        const pagesCount = Math.ceil(totalCountOfUsers / dbPageSize)
         const formatFoundUsers = foundUsers.map(userTypeMapping)
         return {
             pagesCount: pagesCount,

@@ -88,7 +88,6 @@ export const postQueryRepository = {
             totalCount: totalCountOfPosts,
             items: formatFoundPosts
         }
-
     },
     async findCommentsOfPost(id: string, paggingData: PaginatorCommentInputModel): Promise<PaginatorCommentViewModel> {
         const {pageNumber, pageSize, sortBy, sortDirection} = paggingData

@@ -14,6 +14,7 @@ export const authBearerMiddleware = async (req: Request, res: Response, next: Ne
     if (userId) {
         req.user = await usersService.findUserById(userId)
         next()
+        return
     }
     res.sendStatus(CodeResponsesEnum.Unauthorized_401)
     return

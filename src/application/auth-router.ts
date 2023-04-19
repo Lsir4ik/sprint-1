@@ -20,12 +20,6 @@ authRouter.post('/', loginInputValidation, async (req: RequestWithBody<LoginInpu
     }
 })
 authRouter.get('/', authBearerMiddleware, async (req: Request, res: Response) => {
-    if (req.headers.authorization) {
-        const myToken = req.headers.authorization.split(' ')[1]
-        const foundUserId = await jwtService.getUserIdByToken(myToken)
-        const meInformation = await usersService.findMeById(foundUserId)
+        const meInformation = await usersService.findMeById(req.user!.id)
         return res.sendStatus(CodeResponsesEnum.OK_200).send(meInformation)
-    }
-    return res.sendStatus(CodeResponsesEnum.Unauthorized_401)
-
 })
