@@ -20,9 +20,8 @@ postsRouter.post('/:id/comments', authBearerMiddleware, createCommentValidation,
 postsRouter.get('/:id/comments', async (req: Request, res: Response) => {
     const foundPost = await postsService.findPostById(req.params.id)
     if (!foundPost) return res.sendStatus(CodeResponsesEnum.Not_Found_404)
-
     const foundCommentsOfPost = await postQueryRepository.findCommentsOfPost(req.params.id, req.query)
-    return res.sendStatus(CodeResponsesEnum.OK_200).send(foundCommentsOfPost)
+    return res.status(CodeResponsesEnum.OK_200).send(foundCommentsOfPost)
 })
 
 postsRouter.get('/', async (req: RequestWithQuery<QueryPostInputModel>, res: Response) => {
